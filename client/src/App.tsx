@@ -1,8 +1,9 @@
-import { Box, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import Header from "./components/Header";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "./api/helpers";
 import Controllers from "./components/Controllers";
+import { FilesList } from "./components/FilesList";
 
 const App = () => {
   const theme = useTheme();
@@ -12,6 +13,7 @@ const App = () => {
     queryFn: fetchData,
   });
 
+  console.log(data);
   return (
     <Box
       sx={{
@@ -34,6 +36,7 @@ const App = () => {
       >
         <Header />
         <Controllers />
+        <FilesList files={data} />
       </Box>
     </Box>
   );

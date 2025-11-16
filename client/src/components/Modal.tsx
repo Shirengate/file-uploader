@@ -1,8 +1,8 @@
 import { Modal, Box, Stack, Typography, Button } from "@mui/material";
-import { memo, useState, type FC } from "react";
+import { memo, useCallback, useState, type FC } from "react";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import Dropzone from "react-dropzone";
-import { File } from "./File";
+import { AttachFile } from "./Files/ui/AttachedFile";
 interface FileModalProps {
   onClose: () => void;
   open: boolean;
@@ -10,6 +10,11 @@ interface FileModalProps {
 const FileModalComponent: FC<FileModalProps> = ({ onClose, open }) => {
   const [files, setFiles] = useState<File[]>([]);
 
+  const deleteItem = useCallback((filename: string) => {
+    setFiles((prev) => {
+      return prev.filter((item) => item.name !== filename);
+    });
+  }, []);
   const getFilesFromDnd = (file: File[]) => {
     setFiles((prev) => [...prev, ...file]);
   };
@@ -76,7 +81,11 @@ const FileModalComponent: FC<FileModalProps> = ({ onClose, open }) => {
             >
               <input {...getInputProps()} />
               {files?.map((fileItem) => (
-                <File file={fileItem} isDownloaded={true} />
+                <AttachFile
+                  deleteItem={deleteItem}
+                  filename={fileItem.name}
+                  key={fileItem.name}
+                />
               ))}
               {files.length === 0 && (
                 <Typography
