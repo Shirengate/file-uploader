@@ -6,13 +6,22 @@ import {
   MenuItem,
   TextField,
   InputAdornment,
+  type SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
+import { memo, useState, type ChangeEvent, type FC } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-
-const Controllers = () => {
+import { FILE_CATEGORY } from "../consts/media-types";
+type FilesFilters = "any" | "docs" | "media";
+interface ControllersProps {
+  changeValue: (filterValue: FilesFilters) => void;
+}
+const Controllers: FC<ControllersProps> = ({ changeValue }) => {
   const [isFocused, setIsFocused] = useState(false);
 
+  const changeValue2 = (e: SelectChangeEvent) => {
+    const type = e.target.value as FilesFilters;
+    changeValue(type);
+  };
   return (
     <Box
       sx={{
@@ -25,15 +34,15 @@ const Controllers = () => {
       <FormControl sx={{ minWidth: 200 }}>
         <InputLabel id="filter-select-label">Категория</InputLabel>
         <Select
+          onChange={changeValue2}
           labelId="filter-select-label"
           id="filter-select"
           label="Категория"
           defaultValue=""
         >
-          <MenuItem value="">Все</MenuItem>
-          <MenuItem value="documents">Документы</MenuItem>
-          <MenuItem value="images">Изображения</MenuItem>
-          <MenuItem value="videos">Видео</MenuItem>
+          <MenuItem value="any">Все</MenuItem>
+          <MenuItem value={FILE_CATEGORY.DOCS}>Документы</MenuItem>
+          <MenuItem value={FILE_CATEGORY.MEDIA}>Медиа</MenuItem>
         </Select>
       </FormControl>
       <TextField
@@ -55,4 +64,4 @@ const Controllers = () => {
   );
 };
 
-export default Controllers;
+export default memo(Controllers);

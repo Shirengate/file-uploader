@@ -7,5 +7,6 @@ export interface BaseFileProps {
   fileName: string;
   iconSize: "small" | "medium" | "large";
   actions: React.ReactNode;
+  icon: React.ReactNode;
   onFileClick?: () => void;
 }

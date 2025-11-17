@@ -1,14 +1,7 @@
 import { Paper, Stack, Typography } from "@mui/material";
 import type { FC } from "react";
 import type { BaseFileProps } from "../model/types";
-import { getFileIcon } from "../../../utils/getIcons";
-export const BaseFile: FC<BaseFileProps> = ({
-  actions,
-  fileName,
-  iconSize,
-  onFileClick,
-}) => {
-  const Icon = getFileIcon(fileName);
+export const BaseFile: FC<BaseFileProps> = ({ actions, fileName, icon }) => {
   return (
     <Stack
       direction="row"
@@ -24,7 +17,7 @@ export const BaseFile: FC<BaseFileProps> = ({
         },
       }}
     >
-      <Icon />
+      {icon}
       <Paper
         variant="outlined"
         sx={{

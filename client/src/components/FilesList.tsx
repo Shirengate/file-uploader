@@ -1,13 +1,15 @@
 import type { FC } from "react";
-import { Stack, Typography, useTheme } from "@mui/material";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
 import { ProfileFile } from "./Files/ui/ProfileFile";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 interface DownloadedFile {
-  link: string;
+  url: string;
   name: string;
 }
 
 const FilesList: FC<{ files: DownloadedFile[] | undefined }> = ({ files }) => {
+  const [parent] = useAutoAnimate();
   const theme = useTheme();
   return (
     <Stack
@@ -22,9 +24,11 @@ const FilesList: FC<{ files: DownloadedFile[] | undefined }> = ({ files }) => {
       >
         Ваши файлы
       </Typography>
-      {files?.map((file) => (
-        <ProfileFile key={file.name} name={file.name} url={file.link} />
-      ))}
+      <Box ref={parent}>
+        {files?.map((file) => (
+          <ProfileFile key={file.name} name={file.name} url={file.url} />
+        ))}
+      </Box>
     </Stack>
   );
 };

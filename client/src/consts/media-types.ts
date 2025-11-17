@@ -56,3 +56,14 @@ export const FILE_TYPE_ICONS: Record<FileType, React.ComponentType> = {
   [FileType.IMAGE]: ImgIcon,
   [FileType.UNKNOWN]: TxtIcon,
 };
+
+export enum FILE_CATEGORY {
+  DOCS = "docs",
+  MEDIA = "media",
+}
+
+// Объект с группировкой типов файлов
+export const FILE_TYPE_CATEGORIES = {
+  docs: [FileType.TEXT, FileType.PDF],
+  media: [FileType.AUDIO, FileType.VIDEO, FileType.IMAGE],
+} as const;
