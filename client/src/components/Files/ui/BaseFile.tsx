@@ -9,7 +9,6 @@ export const BaseFile: FC<BaseFileProps> = ({ actions, fileName, icon }) => {
       gap={1}
       sx={{
         p: 1,
-        border: "1px solid",
         borderColor: "divider",
         borderRadius: 1,
         "&:hover": {
@@ -21,6 +20,7 @@ export const BaseFile: FC<BaseFileProps> = ({ actions, fileName, icon }) => {
       <Paper
         variant="outlined"
         sx={{
+          border: "none",
           flex: 1,
           py: 1,
           px: 2,
