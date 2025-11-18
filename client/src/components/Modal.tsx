@@ -41,7 +41,7 @@ const FileModalComponent: FC<FileModalProps> = ({ onClose, open }) => {
     });
   };
 
-  const { mutate } = useMutation({
+  const { mutate, mutateAsync } = useMutation({
     mutationFn: fetchData,
 
     onSuccess: () => {
@@ -51,9 +51,11 @@ const FileModalComponent: FC<FileModalProps> = ({ onClose, open }) => {
     },
   });
   const publishFiles = async () => {
-    files.forEach(async (file) => {
-      mutate(file);
-    });
+    setLoading(true);
+
+    await Promise.all(files.map(async (file) => await mutateAsync(file)));
+
+    setLoading(false);
     setFiles([]);
   };
   return (

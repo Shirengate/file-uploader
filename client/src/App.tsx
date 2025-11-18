@@ -18,7 +18,7 @@ const App = () => {
   const changeFilterValue = useCallback((filterValue: FilesFilters) => {
     setFilter(filterValue);
   }, []);
-  const { data, isError, isLoading } = useQuery<UploadedFile[]>({
+  const { data } = useQuery<UploadedFile[]>({
     queryKey: ["files"],
     queryFn: fetchData,
   });
