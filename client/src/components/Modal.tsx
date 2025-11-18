@@ -1,8 +1,17 @@
-import { Modal, Box, Stack, Typography, Button } from "@mui/material";
+import {
+  Modal,
+  Box,
+  Stack,
+  Typography,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import { memo, useCallback, useState, type FC } from "react";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import Dropzone from "react-dropzone";
 import { AttachFile } from "./Files/ui/AttachedFile";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 interface FileModalProps {
   onClose: () => void;
   open: boolean;
@@ -10,6 +19,8 @@ interface FileModalProps {
 const FileModalComponent: FC<FileModalProps> = ({ onClose, open }) => {
   const [files, setFiles] = useState<File[]>([]);
 
+  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
   const deleteItem = useCallback((filename: string) => {
     setFiles((prev) => {
       return prev.filter((item) => item.name !== filename);
@@ -30,10 +41,20 @@ const FileModalComponent: FC<FileModalProps> = ({ onClose, open }) => {
     });
   };
 
+  const { mutate } = useMutation({
+    mutationFn: fetchData,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["files"],
+      });
+    },
+  });
   const publishFiles = async () => {
     files.forEach(async (file) => {
-      await fetchData(file);
+      mutate(file);
     });
+    setFiles([]);
   };
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="upload-modal-title">
@@ -104,11 +125,11 @@ const FileModalComponent: FC<FileModalProps> = ({ onClose, open }) => {
         <Button
           onClick={publishFiles}
           variant="contained"
-          disabled={files.length === 0}
+          disabled={files.length === 0 || loading}
           fullWidth
           size="large"
         >
-          Отправить
+          {loading ? <CircularProgress size={30} /> : "Отправить"}
         </Button>
       </Box>
     </Modal>
