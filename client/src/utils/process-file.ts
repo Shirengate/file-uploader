@@ -1,7 +1,8 @@
-import { getFileIcon, getFileType } from "./getIcons";
+import { getFileIcon, getFileExt, getFileType } from "./getIcons";
 
 export const proccessFile = (filename: string) => {
-  const extenction = getFileType(filename);
+  const extenction = getFileExt(filename);
   const fileIcon = getFileIcon(filename);
-  return { extenction, Icon: fileIcon };
+  const type = getFileType(filename);
+  return { extenction, Icon: fileIcon, type };
 };

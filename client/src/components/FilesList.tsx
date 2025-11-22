@@ -12,6 +12,11 @@ import { ProfileFile } from "./Files/ui/ProfileFile";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import { useMutation } from "@tanstack/react-query";
+import JSZip from "jszip";
+import { saveFile } from "../utils/save-file";
+import { FileType, MIME_TYPES } from "../consts/media-types";
+import { useDownloadFile } from "../hooks/use-download-flle";
 
 interface DownloadedFile {
   url: string;
@@ -41,7 +46,7 @@ const FilesList: FC<{ files: DownloadedFile[] | undefined }> = ({ files }) => {
   const pickAllFiles = () => {
     if (!files) return;
 
-    if (pickedFiles.size > 0) {
+    if (pickedFiles.size === files.length) {
       setPickedFiles(new Map());
       return;
     }
@@ -55,8 +60,14 @@ const FilesList: FC<{ files: DownloadedFile[] | undefined }> = ({ files }) => {
   const [parent] = useAutoAnimate();
   const theme = useTheme();
 
-  const handleDownload = () => {
-    console.log("Загрузка файлов...");
+  const { downloadZipFile } = useDownloadFile();
+
+  const handleDownload = async () => {
+    try {
+      await downloadZipFile(pickedFiles);
+    } catch (error) {
+      return error;
+    }
   };
 
   return (
@@ -117,25 +128,27 @@ const FilesList: FC<{ files: DownloadedFile[] | undefined }> = ({ files }) => {
             Pick all files
           </Typography>
 
-          <Tooltip title="Загрузить" arrow>
-            <IconButton
-              onClick={handleDownload}
-              sx={{
-                color: theme.palette.primary.main,
-                backgroundColor: theme.palette.action.hover,
-                "&:hover": {
-                  backgroundColor: theme.palette.primary.main,
-                  color: "white",
-                  transform: "scale(1.1)",
-                  transition: "all 0.2s ease-in-out",
-                },
-                width: 40,
-                height: 40,
-              }}
-            >
-              <CloudDownloadIcon />
-            </IconButton>
-          </Tooltip>
+          {pickedFiles.size > 0 && (
+            <Tooltip title="Download" arrow>
+              <IconButton
+                onClick={handleDownload}
+                sx={{
+                  color: theme.palette.primary.main,
+                  backgroundColor: theme.palette.action.hover,
+                  "&:hover": {
+                    backgroundColor: theme.palette.primary.main,
+                    color: "white",
+                    transform: "scale(1.1)",
+                    transition: "all 0.2s ease-in-out",
+                  },
+                  width: 40,
+                  height: 40,
+                }}
+              >
+                <CloudDownloadIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </Stack>
       </Stack>
       <Box ref={parent} mt={2}>

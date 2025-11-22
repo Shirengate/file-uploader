@@ -1,10 +1,11 @@
 import { Box, Checkbox, IconButton, Stack } from "@mui/material";
-import { useState, type FC } from "react";
+import { type FC } from "react";
 import { BaseFile } from "./BaseFile";
 import type { UploadedFile } from "../model/types";
 import { proccessFile } from "../../../utils/process-file";
-import { useMutation } from "@tanstack/react-query";
 import { DownloadRounded } from "@mui/icons-material";
+import toast from "react-hot-toast";
+import { useDownloadFile } from "../../../hooks/use-download-flle";
 
 export const ProfileFile: FC<UploadedFile> = ({
   name,
@@ -12,31 +13,24 @@ export const ProfileFile: FC<UploadedFile> = ({
   onFileClick,
   isPicked,
 }) => {
-  const { Icon, extenction } = proccessFile(name);
+  const { Icon, extenction, type } = proccessFile(name);
 
-  const mutation = useMutation({
-    mutationFn: (url: string) => {
-      return fetch(url);
-    },
-  });
-
+  const { downloadSingleFile } = useDownloadFile();
   const handleGet = async () => {
-    await mutation.mutateAsync(url);
-    const data = await mutation.data!.blob();
-
-    const handle = await globalThis.showSaveFilePicker({
-      suggestedName: name,
-      types: [
-        {
-          accept: {
-            [data.type]: [`.${extenction}`],
-          },
+    toast.promise(
+      () => downloadSingleFile({ ext: extenction, name, url, type }),
+      {
+        loading: "Loading",
+        success: "Success",
+        error: "Save error, try again",
+      },
+      {
+        position: "bottom-right",
+        style: {
+          fontFamily: "Arial",
         },
-      ],
-    });
-    const writable = await handle.createWritable();
-    await writable.write(data);
-    await writable.close();
+      }
+    );
   };
 
   return (
@@ -52,7 +46,7 @@ export const ProfileFile: FC<UploadedFile> = ({
             }}
             size="large"
             sx={{
-              p: 0,
+              p: 0.5,
             }}
           />
         ) : (
@@ -74,7 +68,12 @@ export const ProfileFile: FC<UploadedFile> = ({
       iconSize="medium"
       actions={
         <Stack direction="row" spacing={0.5}>
-          <IconButton onClick={handleGet} size={"medium"} color="default">
+          <IconButton
+            disabled={isPicked}
+            onClick={handleGet}
+            size={"medium"}
+            color="default"
+          >
             <DownloadRounded fontSize={"medium"} />
           </IconButton>
           {/* <IconButton size={"medium"} color="primary">

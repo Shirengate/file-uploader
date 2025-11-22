@@ -13,6 +13,7 @@ export const FileType = {
   TEXT: "text",
   PDF: "pdf",
   UNKNOWN: "unknown",
+  ZIP: "zip",
 } as const;
 
 export type FileType = (typeof FileType)[keyof typeof FileType];
@@ -39,13 +40,56 @@ export const FILE_EXTENSIONS: Record<string, FileType> = {
   csv: FileType.TEXT,
   json: FileType.TEXT,
 
-  /// Image
+  // Image
   jpg: FileType.IMAGE,
+  jpeg: FileType.IMAGE,
   png: FileType.IMAGE,
+  gif: FileType.IMAGE,
+  webp: FileType.IMAGE,
 
   // PDF
   pdf: FileType.PDF,
 };
+
+// Общие MIME типы
+export enum MIME_TYPES {
+  // Audio
+  MP3 = "audio/mpeg",
+  WAV = "audio/wav",
+  OGG = "audio/ogg",
+  M4A = "audio/x-m4a",
+
+  // Video
+  MP4 = "video/mp4",
+  AVI = "video/x-msvideo",
+  MOV = "video/quicktime",
+  WEBM = "video/webm",
+
+  // Text
+  TXT = "text/plain",
+  CSV = "text/csv",
+  JSON = "application/json",
+  HTML = "text/html",
+
+  // Image
+  JPEG = "image/jpeg",
+  JPG = "image/jpg",
+  PNG = "image/png",
+  GIF = "image/gif",
+  WEBP = "image/webp",
+
+  // PDF
+  PDF = "application/pdf",
+
+  // Documents
+  DOC = "application/msword",
+  DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+
+  // Archives
+  ZIP = "application/zip",
+  //Default
+  DEF = "application/octet-stream",
+}
 
 // Маппинг типов на иконки
 export const FILE_TYPE_ICONS: Record<FileType, React.ComponentType> = {
