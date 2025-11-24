@@ -5,14 +5,11 @@ import { FilesList } from "@/modules/files-profile/";
 import { useCallback, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { FileModal } from "@/modules/upload-files/";
-
-type FilesFilters = "any" | "docs" | "media";
+import type { FilesFilters } from "@/core/types/types";
 
 const RootPage = () => {
   const theme = useTheme();
-
   const [filter, setFilter] = useState<FilesFilters>("any");
-
   const changeFilterValue = useCallback((filterValue: FilesFilters) => {
     setFilter(filterValue);
   }, []);
