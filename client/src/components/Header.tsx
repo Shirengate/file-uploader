@@ -6,10 +6,13 @@ import {
   useTheme,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { useCallback, useState } from "react";
-import { FileModal } from "./Modal";
+import { useCallback, useState, type FC } from "react";
+import type { BaseModalProps } from "@/core";
 
-const Header = () => {
+interface HeaderProps {
+  ModalWindow: FC<BaseModalProps>;
+}
+export const Header: FC<HeaderProps> = ({ ModalWindow }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
 
@@ -36,9 +39,7 @@ const Header = () => {
           </IconButton>
         </Tooltip>
       </Stack>
-      <FileModal open={open} onClose={handleClose} />
+      <ModalWindow onClose={handleClose} open={open} />
     </>
   );
 };
-
-export default Header;

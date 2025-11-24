@@ -22,6 +22,18 @@ export default defineConfig([
     rules: {
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": "error",
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["../*"],
+              message:
+                "Пожалуйста, используйте алиасы (@/...) вместо относительных путей к родительским папкам.",
+            },
+          ],
+        },
+      ],
     },
   },
 ]);
